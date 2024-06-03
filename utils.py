@@ -15,7 +15,7 @@ class Utils:
 
         if not exists(OUTPUT_DIR):
             mkdir(OUTPUT_DIR)
-            
+
         mkdir(self.output_dir)
         with open(self.log_path, "w", encoding="utf-8") as f:
             pass
@@ -59,3 +59,27 @@ class Utils:
             param_dict['id'] = param_id  # 添加参数ID
             yield param_dict
             param_id += 1  # 递增参数ID
+
+    def save_rank(self, val_acc_dict, val_los_dict):
+        with open(self.output_dir + "/rank.md", "w", encoding="utf-8") as f:
+            rank = 1
+
+            f.write("# Val_los_rank\n\n")
+            f.write("| rank | loss | id |\n")
+            f.write("| ---- | ---- | -- |\n")
+
+            for k, v in sorted(val_los_dict.items(), key=lambda x:x[1], reverse = False):
+                f.write(f"| {rank} | {v} | {k} |\n")
+                rank += 1
+
+            f.write("\n\n")
+
+            rank = 1
+
+            f.write("# Val_acc_rank\n\n")
+            f.write("| rank | acc | id |\n")
+            f.write("| ---- | --- | -- |\n")
+
+            for k, v in sorted(val_acc_dict.items(), key=lambda x:x[1], reverse = True):
+                f.write(f"| {rank} | {v} | {k} |\n")
+                rank += 1

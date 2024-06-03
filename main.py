@@ -23,11 +23,17 @@ if __name__ == "__main__":
     # X_train, X_val, X_test, y_train, y_val, y_test = load_data()
     # model, losses, accuracies, validation_losses, validation_accuracy = train_model(X_train, X_val, y_train, y_val, params, utils)
 
+    val_acc_dict = dict()
+    val_los_dict = dict()
 
     for params in utils.generate_param_combinations():
         X_train, X_val, X_test, y_train, y_val, y_test = load_data()
         try:
             model, losses, accuracies, validation_losses, validation_accuracy = train_model(X_train, X_val, y_train, y_val, params, utils)
+            val_acc_dict[params['id']] = max(validation_accuracy)
+            val_los_dict[params['id']] = min(validation_losses)
         except Exception as e:
             print(e)
             utils.log(f"<hr>\n\n{e}\n\n")
+
+    utils.save_rank(val_acc_dict, val_los_dict)
